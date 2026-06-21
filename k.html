@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для Самой Прекрасной Девушки 🖤</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Pacifico&family=Montserrat:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0f0508 0%, #1a0b12 40%, #2d0b19 80%, #14050a 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .romantic-font {
+            font-family: 'Pacifico', cursive;
+        }
+
+        .cozy-font {
+            font-family: 'Comfortaa', cursive;
+        }
+
+        /* Эффект тёмного томного стекла */
+        .glass {
+            background: rgba(20, 10, 15, 0.65);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 75, 130, 0.15);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+        }
+
+        .glass-dark {
+            background: rgba(10, 3, 7, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 75, 130, 0.1);
+        }
+
+        /* Анимация вращения пластинки */
+        .spin-vinyl {
+            animation: spin 6s linear infinite;
+        }
+        .spin-vinyl.paused {
+            animation-play-state: paused;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Красивое неоновое размытие для рамок видео */
+        .cinema-glow {
+            box-shadow: 0 0 35px rgba(225, 29, 72, 0.25);
+            border: 1px solid rgba(225, 29, 72, 0.3);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f0508;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(244, 63, 94, 0.4);
+            border-radius: 10px;
+        }
+
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .interactive-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2.5s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(244, 63, 94, 0.3); transform: scale(1); }
+            100% { box-shadow: 0 0 35px rgba(244, 63, 94, 0.7); transform: scale(1.03); }
+        }
+
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+        }
+        .fade-in-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="text-gray-200 antialiased min-h-screen">
+
+    <canvas id="particles-canvas"></canvas>
+
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="welcome-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0d0407] px-4 text-center transition-all duration-1000">
+        <div class="glass p-10 rounded-3xl max-w-lg shadow-2xl border border-rose-950/40">
+            <div class="text-6xl mb-6 drop-shadow-[0_0_15px_rgba(244,63,94,0.5)]">✨</div>
+            <h1 class="romantic-font text-4xl md:text-5xl text-rose-400 mb-4 tracking-wide">Жони ман...</h1>
+            <p class="text-gray-400 font-light mb-8 text-sm md:text-base leading-relaxed">
+                Я знаю, что твоё настроение сейчас спряталось. Позволь мне забрать твои грустные мысли. Включи музыку Наргис Бандишоевой, которая ждёт тебя внутри, и растворись в этом моменте.
+            </p>
+            <button onclick="unlockSurprise()" class="bg-gradient-to-r from-rose-700 via-rose-600 to-pink-700 text-white font-bold py-4 px-12 rounded-full shadow-2xl transition-all duration-300 text-lg cursor-pointer pulse-glow uppercase tracking-widest">
+                Войти и слушать 🥀
+            </button>
+        </div>
+    </div>
+
+    <div id="main-content" class="interactive-content hidden">
+        
+        <nav class="fixed top-4 left-4 right-4 z-40 glass rounded-2xl shadow-lg border border-white/5">
+            <div class="max-w-6xl mx-auto px-6 py-3.5 flex justify-between items-center">
+                <span class="romantic-font text-2xl text-rose-400 drop-shadow-[0_0_10px_rgba(244,63,94,0.3)] cursor-pointer" onclick="window.scrollTo(0,0)">Для Тебя</span>
+                <div class="hidden md:flex space-x-8 font-medium text-gray-400 text-sm tracking-wide">
+                    <a href="#music-section" class="hover:text-rose-400 transition-colors">Музыка</a>
+                    <a href="#video-section" class="hover:text-rose-400 transition-colors">Галерея Видео</a>
+                    <a href="#compliments-hub" class="hover:text-rose-400 transition-colors">Слова любви</a>
+                    <a href="#arcade-zone" class="hover:text-rose-400 transition-colors">Интерактив</a>
+                </div>
+                <div class="flex items-center gap-3 bg-rose-500/10 px-4 py-2 rounded-xl border border-rose-500/20 cursor-pointer" onclick="toggleAudio()">
+                    <span id="music-wave" class="flex gap-1 items-center">
+                        <span class="w-1 h-3.5 bg-rose-400 block rounded-full animate-bounce"></span>
+                        <span class="w-1 h-2.5 bg-rose-400 block rounded-full animate-bounce [animation-delay:0.15s]"></span>
+                        <span class="w-1 h-4.5 bg-rose-400 block rounded-full animate-bounce [animation-delay:0.3s]"></span>
+                    </span>
+                    <span id="music-status-text" class="text-xs font-semibold text-rose-300 uppercase tracking-wider">Жони ман ⏸️</span>
+                </div>
+            </div>
+        </nav>
+
+        <header class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-24 max-w-5xl mx-auto">
+            <div class="glass p-8 md:p-14 rounded-3xl max-w-4xl shadow-2xl border border-white/5">
+                <h1 class="romantic-font text-5xl md:text-8xl text-rose-400 mb-6 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)] leading-tight">
+                    Ты — моё самое тихое и нежное счастье
+                </h1>
+                <p class="cozy-font text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-10">
+                    Слышишь, как поёт Наргис? Эта мелодия наполнена глубиной, точно так же, как и мои чувства к тебе. Ниже я приготовил для тебя личный плеер и целую галерею твоих видео.
+                </p>
+                <div class="flex flex-wrap justify-center gap-5">
+                    <a href="#music-section" class="bg-gradient-to-r from-rose-800 to-rose-600 hover:from-rose-700 hover:to-rose-500 text-white font-semibold py-4 px-8 rounded-xl shadow-lg transition duration-300 transform hover:-translate-y-0.5 text-xs tracking-widest uppercase">
+                        Открыть плеер 🎵
+                    </a>
+                    <a href="#video-section" class="bg-white/5 hover:bg-white/10 text-rose-300 font-semibold py-4 px-8 rounded-xl border border-rose-500/20 shadow transition duration-300 transform hover:-translate-y-0.5 text-xs tracking-widest uppercase">
+                        Смотреть 3 Видео 👇
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <section id="music-section" class="py-20 max-w-4xl mx-auto px-4 scroll-mt-28 fade-in-section">
+            <div class="text-center mb-10">
+                <h2 class="romantic-font text-4xl md:text-6xl text-rose-400 mb-2">Наш Музыкальный Уголок</h2>
+                <p class="text-gray-400 font-light text-sm">Главный трек твоего сердца</p>
+            </div>
+
+            <div class="glass p-8 rounded-3xl shadow-2xl border border-white/5 flex flex-col md:flex-row items-center gap-8 bg-gradient-to-br from-rose-950/20 to-stone-950/40">
+                <div class="relative w-40 h-40 md:w-48 md:h-48 flex-shrink-0">
+                    <div id="vinyl-disc" class="w-full h-full rounded-full bg-neutral-900 border-4 border-neutral-800 shadow-2xl flex items-center justify-center spin-vinyl paused">
+                        <div class="w-16 h-16 rounded-full bg-rose-900 border-2 border-rose-400 flex items-center justify-center text-[10px] text-center text-rose-200 font-bold p-1 leading-tight">
+                            Жони ман
+                        </div>
+                    </div>
+                    <div class="absolute -top-2 right-2 text-3xl transform rotate-12">📌</div>
+                </div>
+                
+                <div class="flex-1 text-center md:text-left">
+                    <span class="bg-rose-500/10 text-rose-300 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase border border-rose-500/20">Сейчас играет</span>
+                    <h3 class="text-2xl md:text-3xl font-bold text-gray-100 mt-3 mb-1">Жони ман (О, душа моя)</h3>
+                    <p class="text-rose-400 font-medium text-sm md:text-base">Наргис Бандишоева</p>
+                    <p class="text-gray-400 font-light text-xs mt-3 leading-relaxed">
+                        Эта великая и глубокая песня звучит здесь для того, чтобы согреть твою душу. Каждая нота напоминает о том, как сильно ты мне дорога. Ты можешь управлять музыкой кнопкой ниже или в шапке сайта.
+                    </p>
+                    
+                    <div class="mt-6 flex flex-wrap justify-center md:justify-start gap-4">
+                        <button onclick="toggleAudio()" id="main-play-btn" class="bg-rose-600 hover:bg-rose-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition duration-200 flex items-center gap-2 cursor-pointer text-xs uppercase tracking-wider">
+                            <span>Пауза</span> ⏸️
+                        </button>
+                        <button onclick="fireHugeConfetti()" class="bg-white/5 hover:bg-white/10 text-rose-300 py-3 px-6 rounded-full border border-rose-500/20 text-xs transition uppercase tracking-wider">
+                            В такт музыке ✨
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="video-section" class="py-24 max-w-5xl mx-auto px-4 scroll-mt-28 fade-in-section">
+            <div class="text-center mb-14">
+                <h2 class="romantic-font text-4xl md:text-6xl text-rose-400 mb-4 drop-shadow-md">Киногалерея для Королевы</h2>
+                <p class="text-gray-400 max-w-md mx-auto font-light text-sm">Я собрал здесь целых 3 видео. Переключай их кнопками снизу, чтобы поднять себе настроение!</p>
+            </div>
+
+            <div class="glass p-4 rounded-3xl shadow-2xl mb-8 bg-black/40 cinema-glow relative overflow-hidden">
+                <div class="relative rounded-2xl overflow-hidden aspect-video bg-neutral-950 flex items-center justify-center group shadow-inner">
+                    <video id="romantic-video" class="w-full h-full object-cover" controls preload="auto" loop muted>
+                        <source id="video-source" src="5314446172469898080.mp4" type="video/mp4">
+                    </video>
+                    
+                    <div id="video-overlay-play" onclick="playRomanticVideo()" class="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer group-hover:bg-black/40 transition-colors duration-300">
+                        <div class="w-20 h-20 rounded-full bg-rose-600/90 text-white flex items-center justify-center text-2xl shadow-[0_0_25px_rgba(225,29,72,0.5)] transform group-hover:scale-110 transition-transform duration-300 pl-1">
+                            ▶️
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-3 mb-14">
+                <button onclick="switchVideo(0, this)" class="video-tab-btn bg-rose-600 text-white font-medium py-2 px-5 rounded-xl text-xs border border-rose-500/30 transition shadow cursor-pointer">
+                    Видео 1🎬
+                </button>
+                <button onclick="switchVideo(1, this)" class="video-tab-btn bg-white/5 hover:bg-white/10 text-gray-300 font-medium py-2 px-5 rounded-xl text-xs border border-white/5 transition cursor-pointer">
+                    Видео 2 💫
+                </button>
+                <button onclick="switchVideo(2, this)" class="video-tab-btn bg-white/5 hover:bg-white/10 text-gray-300 font-medium py-2 px-5 rounded-xl text-xs border border-white/5 transition cursor-pointer">
+                    Видео 3 ❤️
+                </button>
+            </div>
+
+            <div class="glass-dark rounded-3xl p-10 border border-rose-950/50 text-center relative overflow-hidden shadow-inner">
+                <div class="absolute -top-4 left-6 text-rose-900/20 font-serif text-[10rem] pointer-events-none select-none">“</div>
+                <h3 class="romantic-font text-2xl md:text-3xl text-rose-400 mb-6">Каждую секунду, глядя на тебя...</h3>
+                
+                <div class="min-h-[100px] flex items-center justify-center px-4">
+                    <p id="under-video-compliment" class="cozy-font text-lg md:text-xl text-gray-300 font-light leading-relaxed transition-all duration-500 transform">
+                        Ты обладаешь какой-то невероятной магией... Твой взгляд на этом видео заставляет моё сердце замирать. 🥰
+                    </p>
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <button onclick="changeVideoCompliment()" class="bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 font-medium py-3 px-10 rounded-full border border-rose-800/30 shadow transition transform hover:scale-105 cursor-pointer text-xs uppercase tracking-wider">
+                        Листать дальше 💫
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="compliments-hub" class="py-24 bg-black/30 border-y border-rose-950/20 scroll-mt-24 fade-in-section">
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <h2 class="romantic-font text-4xl md:text-6xl text-rose-400 mb-4">Шёпот моих мыслей</h2>
+                <p class="text-gray-500 mb-12 max-w-sm mx-auto font-light text-xs tracking-wide">Когда станет совсем тоскливо — просто прикоснись к кнопке.</p>
+                
+                <div class="glass p-8 md:p-14 rounded-3xl shadow-2xl min-h-[260px] flex flex-col justify-between items-center border border-white/5">
+                    <div class="text-3xl text-rose-500/40 drop-shadow-[0_0_10px_rgba(244,63,94,0.2)]">🖤</div>
+                    <div class="flex-1 flex items-center justify-center my-4">
+                        <p id="hub-compliment-text" class="text-lg md:text-xl text-gray-200 font-medium leading-relaxed max-w-2xl">
+                            Ты заслуживаешь всего самого лучшего в этой вселенной. И я сделаю всё, чтобы ты была счастлива!
+                        </p>
+                    </div>
+                    <button onclick="generateHubCompliment()" class="mt-6 bg-gradient-to-r from-rose-900 via-rose-800 to-stone-900 text-rose-200 font-semibold py-3.5 px-10 rounded-xl shadow-md border border-rose-700/20 hover:opacity-90 transition transform hover:scale-103 cursor-pointer tracking-wider text-xs uppercase">
+                        Принять нежность
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="arcade-zone" class="py-24 max-w-5xl mx-auto px-4 scroll-mt-24 fade-in-section">
+            <div class="text-center mb-16">
+                <h2 class="romantic-font text-4xl md:text-6xl text-rose-400 mb-3">Улыбнись мне 🕹️</h2>
+                <p class="text-gray-400 font-light text-sm">Простые игры, созданные для того, чтобы отвлечь твою красивую голову.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="glass p-6 md:p-8 rounded-3xl shadow-2xl flex flex-col justify-between border border-white/5">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold text-rose-300 font-sans">Поймай Мою Любовь 🎯</h3>
+                            <span class="bg-rose-950/80 text-rose-300 px-3 py-1 rounded-full text-xs border border-rose-800/30">Счёт: <span id="arcade-score" class="font-bold">0</span></span>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-6 leading-relaxed">Это упрямое сердечко бегает так же быстро, как мои мысли о тебе. Попробуй кликнуть или поймать его курсором!</p>
+                    </div>
+                    <div class="relative h-64 bg-black/40 rounded-2xl overflow-hidden border border-rose-950 shadow-inner" id="arcade-container-1">
+                        <button id="moving-heart" class="absolute text-4xl p-2 cursor-pointer transition-all duration-150 select-none bg-transparent border-0 outline-none filter drop-shadow-[0_0_10px_rgba(244,63,94,0.6)]" style="left: 45%; top: 40%;">❤️</button>
+                    </div>
+                </div>
+
+                <div class="glass p-6 md:p-8 rounded-3xl shadow-2xl flex flex-col justify-between border border-white/5">
+                    <div>
+                        <h3 class="text-xl font-semibold text-rose-300 mb-4">Главный вопрос Вселенной ✨</h3>
+                        <p class="text-xs text-gray-400 mb-6 leading-relaxed">Выбери тот вариант ответа, который откликается в твоей душе сильнее всего.</p>
+                    </div>
+                    <div class="space-y-3.5" id="love-quiz-box">
+                        <button onclick="handleQuiz(1)" class="w-full bg-white/5 hover:bg-rose-950/30 text-left p-4 rounded-xl border border-white/5 text-gray-300 text-sm transition duration-200 cursor-pointer">
+                            Ты любима больше, чем все звёзды на небесах 🌌
+                        </button>
+                        <button onclick="handleQuiz(2)" class="w-full bg-white/5 hover:bg-rose-950/30 text-left p-4 rounded-xl border border-white/5 text-gray-300 text-sm transition duration-200 cursor-pointer">
+                            Твоя красота затмевает солнце и луну вместе взятые ☀️
+                        </button>
+                        <button onclick="handleQuiz(3)" class="w-full bg-gradient-to-r from-rose-950/60 to-purple-950/60 text-left p-4 rounded-xl border border-rose-500/20 font-medium text-rose-300 transition duration-200 shadow-md cursor-pointer transform hover:scale-[1.01]">
+                            Все варианты верны, умноженные на бесконечность! 💕
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center py-12 border-t border-rose-950/30 text-[10px] text-gray-500 font-medium tracking-widest uppercase bg-black/40">
+            Этот сайт принадлежит самой прекрасной девушке на Земле 💍 | С любовью от твоего парня
+        </footer>
+    </div>
+
+    <script>
+        // СПИСОК ИМЁН ФАЙЛОВ ДЛЯ 3-Х ВИДЕО
+        // Замени video2.mp4 и video3.mp4 на настоящие имена своих файлов, когда закинешь их в папку
+        const videoPlaylist = [
+            "5314446172469898080.mp4", 
+            "5314446172469898140.mp4", 
+             "5314446172469898143.mp4"
+        ];
+
+        const complimentsUnderVideo = [
+            "Ты обладаешь какой-то невероятной магией... Твой взгляд на этом видео заставляет моё сердце замирать. 🥰",
+            "Твоя улыбка — это буквально лучшее, что я видел в своей жизни. Пожалуйста, улыбайся чаще! ✨",
+            "В твоих глазах можно утонуть, и это будет самое прекрасное путешествие. 👀💖",
+            "Ты невероятно сочетаешь в себе космическую красоту, нежность и глубокий характер. Горжусь тобой!",
+            "Даже на этом видео невозможно передать и сотой доли того, как сильно ты прекрасна в реальности. 👑",
+            "Моё сердце бьётся чаще каждый раз, когда я просто думаю о тебе. Ты моё всё!"
+        ];
+
+        const hubCompliments = [
+            "Ты — причина, по которой я просыпаюсь с улыбкой на лице каждый день. Прошу, не грусти! ❤️",
+            "Твоя доброта способна растопить любые ледники. Ты самый чистый и светлый человек.",
+            "Если бы меня попросили описать идеальный мир в одном слове — я бы просто назвал твоё имя. 🌍",
+            "Ты невероятно милая, даже когда грустишь или дуешь губки. Моя маленькая радость!",
+            "Вся музыка мира, все песни о любви (даже эта прекрасная песня Наргис) написаны как будто про тебя. 🎶",
+            "Я люблю в тебе абсолютно всё: от твоих безумных идей до самых крошечных привычек.",
+            "Ты заслуживаешь охапки самых красивых цветов каждый день просто за то, что ты есть у меня! 🌹",
+            "Ты мой самый близкий, самый родной и самый любимый человек во всей вселенной.",
+            "Никакое плохое настроение не устоит против того, как сильно я тебя люблю. Улыбнись, солнце! ☀️",
+            "Ты уникальна. Помни это всегда. Ты моя гордость и моё сокровище."
+        ];
+
+        let currentVideoComplimentIdx = 0;
+
+        // Элементы фонового Canvas
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+        const numberOfParticles = 40;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class HeartParticle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 12 + 6;
+                this.speedY = Math.random() * 1.2 + 0.4;
+                this.speedX = Math.sin(Math.random() * 2) * 0.3;
+                this.opacity = Math.random() * 0.4 + 0.15;
+                const colors = ['#9b1c31', '#800020', '#e11d48', '#fda4af', '#4c0519'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y > canvas.height) this.reset();
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                const topCurveHeight = this.size * 0.3;
+                ctx.moveTo(this.x, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x, this.y, this.x - this.size / 2, this.y, this.x - this.size / 2, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x - this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x, this.y + (this.size + topCurveHeight) / 2, this.x, this.y + this.size);
+                ctx.bezierCurveTo(this.x, this.y + (this.size + topCurveHeight) / 2, this.x + this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x + this.size / 2, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x + this.size / 2, this.y, this.x, this.y, this.x, this.y + topCurveHeight);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            for (let i = 0; i < numberOfParticles; i++) particlesArray.push(new HeartParticle());
+        }
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles();
+        animateParticles();
+
+        // Логика аудио-плеера Наргис Бандишоевой
+        const bgMusic = document.getElementById('bg-music');
+        const musicStatusText = document.getElementById('music-status-text');
+        const musicWave = document.getElementById('music-wave');
+        const vinylDisc = document.getElementById('vinyl-disc');
+        const mainPlayBtn = document.getElementById('main-play-btn');
+
+        function unlockSurprise() {
+            const welcomeScreen = document.getElementById('welcome-screen');
+            welcomeScreen.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                welcomeScreen.classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                
+                bgMusic.play().then(() => {
+                    updateMusicUI(true);
+                }).catch(err => {
+                    updateMusicUI(false);
+                });
+                fireHugeConfetti();
+                initScrollAnimations();
+            }, 1000);
+        }
+
+        function toggleAudio() {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                updateMusicUI(true);
+            } else {
+                bgMusic.pause();
+                updateMusicUI(false);
+            }
+        }
+
+        function updateMusicUI(isPlaying) {
+            if (isPlaying) {
+                musicStatusText.innerText = "Жони ман ⏸️";
+                musicWave.style.opacity = "1";
+                vinylDisc.classList.remove('paused');
+                if(mainPlayBtn) mainPlayBtn.innerHTML = `<span>Пауза</span> ⏸️`;
+            } else {
+                musicStatusText.innerText = "Жони ман ▶️";
+                musicWave.style.opacity = "0.3";
+                vinylDisc.classList.add('paused');
+                if(mainPlayBtn) mainPlayBtn.innerHTML = `<span>Слушать</span> ▶️`;
+            }
+        }
+
+        // Логика Галереи из 3-х видеозаписей
+        const video = document.getElementById('romantic-video');
+        const videoSource = document.getElementById('video-source');
+        const videoOverlay = document.getElementById('video-overlay-play');
+
+        function playRomanticVideo() {
+            videoOverlay.classList.add('hidden');
+            video.muted = false;
+            video.play();
+        }
+        video.addEventListener('pause', () => {
+            videoOverlay.classList.remove('hidden');
+        });
+
+        function switchVideo(index, buttonElement) {
+            // Меняем файл источника видео
+            video.pause();
+            videoSource.src = videoPlaylist[index];
+            video.load();
+            
+            // Сбрасываем кнопку запуска плеера
+            videoOverlay.classList.remove('hidden');
+
+            // Стилизация вкладок
+            const tabs = document.querySelectorAll('.video-tab-btn');
+            tabs.forEach(tab => {
+                tab.className = "video-tab-btn bg-white/5 hover:bg-white/10 text-gray-300 font-medium py-2 px-5 rounded-xl text-xs border border-white/5 transition cursor-pointer";
+            });
+            buttonElement.className = "video-tab-btn bg-rose-600 text-white font-medium py-2 px-5 rounded-xl text-xs border border-rose-500/30 transition shadow cursor-pointer";
+            
+            // Взрыв нежных конфетти при смене видео
+            confetti({ particleCount: 25, spread: 40 });
+        }
+
+        function changeVideoCompliment() {
+            currentVideoComplimentIdx = (currentVideoComplimentIdx + 1) % complimentsUnderVideo.length;
+            const element = document.getElementById('under-video-compliment');
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                element.innerText = complimentsUnderVideo[currentVideoComplimentIdx];
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+                confetti({ particleCount: 15, spread: 35, colors: ['#e11d48', '#fda4af'] });
+            }, 400);
+        }
+
+        function generateHubCompliment() {
+            const element = document.getElementById('hub-compliment-text');
+            const randomCompliment = hubCompliments[Math.floor(Math.random() * hubCompliments.length)];
+            element.style.opacity = '0';
+            setTimeout(() => {
+                element.innerText = randomCompliment;
+                element.style.opacity = '1';
+                confetti({ particleCount: 30, spread: 80, colors: ['#9b1c31', '#fda4af', '#fff'] });
+            }, 250);
+        }
+
+        // Мини-игры
+        const movingHeart = document.getElementById('moving-heart');
+        const arcadeContainer = document.getElementById('arcade-container-1');
+        let arcadeScore = 0;
+
+        function relocateHeart() {
+            const maxX = arcadeContainer.clientWidth - movingHeart.clientWidth;
+            const maxY = arcadeContainer.clientHeight - movingHeart.clientHeight;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            movingHeart.style.left = randomX + 'px';
+            movingHeart.style.top = randomY + 'px';
+        }
+        movingHeart.addEventListener('mouseenter', relocateHeart);
+        movingHeart.addEventListener('touchstart', (e) => { e.preventDefault(); relocateHeart(); });
+        movingHeart.addEventListener('click', (e) => {
+            e.stopPropagation();
+            arcadeScore++;
+            document.getElementById('arcade-score').innerText = arcadeScore;
+            confetti({ particleCount: 30, spread: 50, origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight } });
+            relocateHeart();
+        });
+
+        function handleQuiz(option) {
+            const quizBox = document.getElementById('love-quiz-box');
+            confetti({ particleCount: 60, spread: 80, colors: ['#e11d48', '#800020'] });
+            quizBox.innerHTML = `
+                <div class="text-center p-6 bg-rose-950/40 rounded-2xl border border-rose-800/40 text-rose-300 font-medium text-base shadow-inner">
+                    Ура! Ты абсолютно права! Моя любовь не имеет границ, улыбнись прямо сейчас! Ты самое дорогое, что у меня есть! 🖤✨💍
+                </div>
+            `;
+        }
+
+        function fireHugeConfetti() {
+            const duration = 2.5 * 1000;
+            const end = Date.now() + duration;
+            (function frame() {
+                confetti({ particleCount: 2, angle: 60, spread: 60, origin: { x: 0 }, colors: ['#800020', '#e11d48', '#ff758f'] });
+                confetti({ particleCount: 2, angle: 120, spread: 60, origin: { x: 1 }, colors: ['#800020', '#e11d48', '#ff758f'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+
+        function initScrollAnimations() {
+            const sections = document.querySelectorAll('.fade-in-section');
+            const observerOptions = { root: null, threshold: 0.12 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, observerOptions);
+            sections.forEach(section => observer.observe(section));
+        }
+    </script>
+</body>
+</html>
